@@ -11,13 +11,63 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   PageController? _pageController;
+
+  // Ripple Animation
+  late AnimationController rippleController;
+  late AnimationController scaleController;
+
+  late Animation<double> rippleAnimation;
+  late Animation<double> scaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+
+    // Setting up the ripple animations
+    rippleController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
+
+    scaleController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
+
+    // Used in container size variation
+    rippleAnimation = Tween<double>(
+      begin: 80.0,
+      end: 90.0,
+    ).animate(
+      CurvedAnimation(
+        parent: rippleController,
+        curve: Curves.easeInOutQuad,
+      ),
+    )..addStatusListener((status) {
+        switch (status) {
+          case AnimationStatus.completed:
+            rippleController.reverse();
+            break;
+          case AnimationStatus.dismissed:
+            rippleController.forward();
+            break;
+
+          default:
+            break;
+        }
+      });
+
+// Used when user taps on inkwell inside the container
+    scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 30.0,
+    ).animate(scaleController);
+
+    // Starts the animation
+    rippleController.forward();
   }
 
   @override
@@ -85,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 180.0),
+                    SizedBox(height: 120.0),
                     Align(
                       child: Text(
                         'Start the morning with your health',
@@ -96,6 +146,33 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(height: 30.0),
                     Align(
                       alignment: Alignment.bottomCenter,
+                      child: AnimatedBuilder(
+                        animation: rippleAnimation,
+                        builder: (context, child) => Container(
+                          width: rippleAnimation.value,
+                          height: rippleAnimation.value,
+                          child: Container(
+                            decoration: utils.Styles.containers['circle'],
+                            child: InkWell(
+                              onTap: () {
+                                scaleController.forward();
+                              },
+                              child: AnimatedBuilder(
+                                animation: scaleAnimation,
+                                builder: (context, child) => Transform.scale(
+                                  scale: scaleAnimation.value,
+                                  child: Container(
+                                    margin: const EdgeInsets.all(10),
+                                    decoration: utils
+                                        .Styles.containers['circle']!
+                                        .copyWith(color: Colors.blue),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

@@ -13,4 +13,11 @@ class Styles {
       fontWeight: FontWeight.w100,
     ),
   };
+
+  static final containers = {
+    'circle': BoxDecoration(
+      shape: BoxShape.circle,
+      color: Colors.blue.withOpacity(.4),
+    )
+  };
 }
