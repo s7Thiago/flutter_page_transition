@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  PageController? _pageController;
+  late PageController _pageController;
 
   // Ripple Animation
   late AnimationController rippleController;
@@ -37,8 +37,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     scaleController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
-      reverseDuration: Duration(milliseconds: 1500),
+      duration: Duration(milliseconds: 800),
     );
 
     // Used in container size variation
@@ -68,7 +67,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 30.0,
-    ).animate(scaleController)
+    ).animate(
+        CurvedAnimation(parent: scaleController, curve: Curves.easeInOutQuad))
       ..addStatusListener((status) {
         switch (status) {
           case AnimationStatus.completed:
@@ -82,7 +82,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
               ),
             );
-            scaleController.reverse();
+
+            Future.delayed(Duration(milliseconds: 1000)).then(
+              (value) => scaleController.reverse(),
+            );
             break;
 
           default:
@@ -94,7 +97,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     rippleController.forward();
   }
 
-  Widget makePage({image = 'assets/images/one.jpg'}) {
+  Widget makePage({image = 'assets/images/one.jpg', title = 'Exercise 1'}) {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -108,9 +111,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           padding: const EdgeInsets.all(40.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(height: 60.0),
-              Text('Exercise 1', style: utils.Styles.texts['h1']),
+              Text(title, style: utils.Styles.texts['h1']),
               SizedBox(height: 40.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +151,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                 ],
               ),
-              SizedBox(height: 120.0),
+              SizedBox(height: 100.0),
               Align(
                 child: Text(
                   'Start the morning with your health',
@@ -197,10 +201,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Scaffold(
       body: PageView(
         controller: _pageController,
+        physics: BouncingScrollPhysics(),
         children: [
           makePage(),
-          makePage(image: 'assets/images/two.jpg'),
-          makePage(image: 'assets/images/three.jpg'),
+          makePage(image: 'assets/images/two.jpg', title: 'Exercise 2'),
+          makePage(image: 'assets/images/three.jpg', title: 'Exercise 3'),
         ],
       ),
     );
