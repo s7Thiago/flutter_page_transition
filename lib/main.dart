@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'tool_box.dart' as utils;
+import 'package:page_transition/page_transition.dart';
+
+import 'widgets/tool_box.dart' as utils;
+import 'dashboard.dart';
 
 main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -35,6 +38,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     scaleController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1000),
+      reverseDuration: Duration(milliseconds: 1500),
     );
 
     // Used in container size variation
@@ -64,10 +68,128 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 30.0,
-    ).animate(scaleController);
+    ).animate(scaleController)
+      ..addStatusListener((status) {
+        switch (status) {
+          case AnimationStatus.completed:
+            Navigator.push(
+              context,
+              PageTransition(
+                type: PageTransitionType.fade,
+                child: Dashboard(),
+                duration: Duration(
+                  milliseconds: 650,
+                ),
+              ),
+            );
+            scaleController.reverse();
+            break;
+
+          default:
+            break;
+        }
+      });
 
     // Starts the animation
     rippleController.forward();
+  }
+
+  Widget makePage({image = 'assets/images/one.jpg'}) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(image),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Container(
+        decoration: utils.Styles.containers['decoration1'],
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 60.0),
+              Text('Exercise 1', style: utils.Styles.texts['h1']),
+              SizedBox(height: 40.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '15',
+                    style: utils.Styles.texts['h1']!
+                        .copyWith(color: Colors.yellow[400]),
+                  ),
+                  Text(
+                    'Minutes',
+                    style: utils.Styles.texts['h1']!.copyWith(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 30,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 40.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '3',
+                    style: utils.Styles.texts['h1']!
+                        .copyWith(color: Colors.yellow[400]),
+                  ),
+                  Text(
+                    'Exercises',
+                    style: utils.Styles.texts['h1']!.copyWith(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 30,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 120.0),
+              Align(
+                child: Text(
+                  'Start the morning with your health',
+                  style: utils.Styles.texts['s1'],
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(height: 30.0),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: AnimatedBuilder(
+                  animation: rippleAnimation,
+                  builder: (context, child) => Container(
+                    width: rippleAnimation.value,
+                    height: rippleAnimation.value,
+                    child: Container(
+                      decoration: utils.Styles.containers['circle'],
+                      child: InkWell(
+                        onTap: () {
+                          scaleController.forward();
+                        },
+                        child: AnimatedBuilder(
+                          animation: scaleAnimation,
+                          builder: (context, child) => Transform.scale(
+                            scale: scaleAnimation.value,
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              decoration: utils.Styles.containers['circle']!
+                                  .copyWith(color: Colors.blue),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -76,109 +198,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: PageView(
         controller: _pageController,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/one.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.black.withOpacity(.3),
-                    Colors.black.withOpacity(.3),
-                  ],
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 60.0),
-                    Text('Exercise 1', style: utils.Styles.texts['h1']),
-                    SizedBox(height: 40.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '15',
-                          style: utils.Styles.texts['h1']!
-                              .copyWith(color: Colors.yellow[400]),
-                        ),
-                        Text(
-                          'Minutes',
-                          style: utils.Styles.texts['h1']!.copyWith(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 30,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 40.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '3',
-                          style: utils.Styles.texts['h1']!
-                              .copyWith(color: Colors.yellow[400]),
-                        ),
-                        Text(
-                          'Exercises',
-                          style: utils.Styles.texts['h1']!.copyWith(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 30,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 120.0),
-                    Align(
-                      child: Text(
-                        'Start the morning with your health',
-                        style: utils.Styles.texts['s1'],
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(height: 30.0),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: AnimatedBuilder(
-                        animation: rippleAnimation,
-                        builder: (context, child) => Container(
-                          width: rippleAnimation.value,
-                          height: rippleAnimation.value,
-                          child: Container(
-                            decoration: utils.Styles.containers['circle'],
-                            child: InkWell(
-                              onTap: () {
-                                scaleController.forward();
-                              },
-                              child: AnimatedBuilder(
-                                animation: scaleAnimation,
-                                builder: (context, child) => Transform.scale(
-                                  scale: scaleAnimation.value,
-                                  child: Container(
-                                    margin: const EdgeInsets.all(10),
-                                    decoration: utils
-                                        .Styles.containers['circle']!
-                                        .copyWith(color: Colors.blue),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          makePage(),
+          makePage(image: 'assets/images/two.jpg'),
+          makePage(image: 'assets/images/three.jpg'),
         ],
       ),
     );
