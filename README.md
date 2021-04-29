@@ -8,11 +8,9 @@ This project is just a personal showcase, done with de aim of register what i ha
 
 ## Project Screen Shots
 
-| Page 1                         | Page 2                         | Page 3                                                             |
+| Page 1                         | Page 2                         | App demo                                                           |
 | ------------------------------ | ------------------------------ | ------------------------------------------------------------------ |
 | ![](assets/screenshot/one.png) | ![](assets/screenshot/two.png) | <img title="" src="assets/screenshot/app.gif" alt="" width="1083"> |
-
-## what's in this project
 
 ## Installation and Setup Instructions
 
