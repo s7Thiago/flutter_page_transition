@@ -10,7 +10,7 @@ This project is just a personal showcase, done with de aim of register what i ha
 
 | Page 1 (Page View)             | Page 2                         | App demo                                                           |
 | ------------------------------ | ------------------------------ | ------------------------------------------------------------------ |
-| <img title="" src="assets/screenshot/one.png" alt="" width="305">  | <img title="" src="assets/screenshot/two.png" alt="" width="305"> | <img title="" src="assets/screenshot/app.gif" alt="" width="305"> |
+| <img title="" src="assets/screenshot/one.png" alt="" width="305px">  | <img title="" src="assets/screenshot/two.png" alt="" width="305px"> | <img title="" src="assets/screenshot/app.gif" alt="" width="305px"> |
 
 ## Installation and Setup Instructions
 
